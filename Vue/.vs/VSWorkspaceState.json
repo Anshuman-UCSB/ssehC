@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\assets",
+    "\\src\\assets\\images",
+    "\\src\\components",
+    "\\src\\layouts",
+    "\\src\\router"
+  ],
+  "SelectedNode": "\\src\\components\\chessSquare.vue",
+  "PreviewInSolutionExplorer": false
+}
