@@ -1,5 +1,6 @@
 from coord import Coord
 from piece import Piece
+from colorama import Fore, Back, Style
 
 class Game:
 	def __init__(self):
@@ -290,9 +291,9 @@ class Game:
 		# except Exception as e:
 		# 	print("ISSUE AT MAKE MOVE:",e)
 		# 	return False
-		print("Recieved move request")
-		print(fromC)
-		print(toC)
+		# print("Recieved move request")
+		# print(fromC)
+		# print(toC)
 		if(self.getSquare(fromC).team != self.turn):
 			return False
 
@@ -333,21 +334,22 @@ class Game:
 
 	def checkWin(self):
 		current = self.turn
+		name = "WHITE" if self.turn == 0 else "BLACK"
 		if self.checkRepetition():
-			print("Win by repetition")
+			print(Fore.LIGHTGREEN_EX,"     ",name,"wins by repetition",Style.RESET_ALL)
 			return True
 		if self.checkInactivity():
-			print("Win by inactivity")
+			print(Fore.LIGHTGREEN_EX,"     ",name,"wins by inactivity",Style.RESET_ALL)
 			return True
 		if self.isCheckMate(current):
-			print("Win by checkmate")
+			print(Fore.LIGHTGREEN_EX,"     ",name,"wins by checkmate",Style.RESET_ALL)
 			return True
 		if self.isStaleMate(current):
-			print("Win by stalemate")
+			print(Fore.LIGHTGREEN_EX,"     ",name,"wins by stalemate",Style.RESET_ALL)
 			return True
 		scoreMod = 1 if current == 0 else -1
 		if scoreMod*self.getScore() > self.SCORETHRESHOLD:
-			print("Win by score")
+			print(Fore.LIGHTGREEN_EX,"     ",name,"wins by score",Style.RESET_ALL)
 			return True
 		return False
 		
@@ -360,3 +362,119 @@ class Game:
 				else:
 					print(" ",end="")
 			print()
+
+
+def chooseSprite(p:Piece):
+	if(p.team != -1):
+		pieceMap = {
+			"knight":"♘",
+			"rook":"♖",
+			"bishop":"♗",
+			"king":"♔",
+			"queen":"♕",
+			"pawn":"♙"
+		}
+		return pieceMap[p.name]
+	# elif(p.team == 1):
+	#     pieceMap = {
+	#         "knight":"♞",
+	#         "rook":"♜",
+	#         "bishop":"♝",
+	#         "king":"♚",
+	#         "queen":"♛",
+	#         "pawn":"♟︎"
+	#     }
+	#     return pieceMap[p.name]
+	return " "
+
+def printGame(g:Game):    
+	b = g.board
+	print(Style.BRIGHT,end="")
+	if g.turn == 1:
+		print(Fore.RED+"      > Black <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.RED+"        Black  ",g.getScore(),Fore.RESET)
+	print("    a b c d e f g h")
+	print("  "+"▄"*18)
+	for y in range(len(b)):
+		print(f"{8-y} █", end="")
+		for x in range(len(b[y])):
+			print(Back.LIGHTBLACK_EX if (x+y)%2 == 1 else Back.BLACK, end="")
+			if(b[y][x].team == 1):
+				print(Fore.RED,end="")
+			elif(b[y][x].team == 0):
+				print(Fore.BLUE,end="")
+			print(chooseSprite(b[y][x]), end =" ")
+			print(Back.RESET+Fore.RESET,end = "")
+		print("█")
+	print("  "+"▀"*18)
+	if g.turn == 0:
+		print(Fore.BLUE+"      > White <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.BLUE+"        White ",g.getScore(),Fore.RESET)
+
+	print(Style.RESET_ALL,end="")
+
+def printPossibleMoves(g:Game, c:Coord):
+	moves = g.getPossibleMoves(c)
+	b = g.board
+	print(Style.BRIGHT,end="")
+	if g.turn == 1:
+		print(Fore.RED+"      > Black <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.RED+"        Black  ",g.getScore(),Fore.RESET)
+	print("    a b c d e f g h")
+	print("  "+"▄"*18)
+	for y in range(len(b)):
+		print(f"{8-y} █", end="")
+		for x in range(len(b[y])):
+			print(Back.LIGHTBLACK_EX if (x+y)%2 == 1 else Back.BLACK, end="")
+			if(Coord(x,y) in moves):
+				print(Back.LIGHTMAGENTA_EX,end="")
+			elif(Coord(x,y) == c):
+				print(Back.LIGHTCYAN_EX,end="")
+			if(b[y][x].team == 1):
+				print(Fore.RED,end="")
+			elif(b[y][x].team == 0):
+				print(Fore.BLUE,end="")
+			print(chooseSprite(b[y][x]), end =" ")
+			print(Back.RESET+Fore.RESET,end = "")
+		print("█")
+	print("  "+"▀"*18)
+	if g.turn == 0:
+		print(Fore.BLUE+"      > White <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.BLUE+"        White ",g.getScore(),Fore.RESET)
+	print(Style.RESET_ALL,end="")
+
+def printValidMoves(g:Game, c:Coord):
+	moves = g.getValidMoves(c)
+	b = g.board
+	print(Style.BRIGHT,end="")
+	if g.turn == 1:
+		print(Fore.RED+"      > Black <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.RED+"        Black  ",g.getScore(),Fore.RESET)
+	print("    a b c d e f g h")
+	print("  "+"▄"*18)
+	for y in range(len(b)):
+		print(f"{8-y} █", end="")
+		for x in range(len(b[y])):
+			print(Back.LIGHTBLACK_EX if (x+y)%2 == 1 else Back.BLACK, end="")
+			if(Coord(x,y) in moves):
+				print(Back.LIGHTMAGENTA_EX,end="")
+			elif(Coord(x,y) == c):
+				print(Back.LIGHTCYAN_EX,end="")
+			if(b[y][x].team == 1):
+				print(Fore.RED,end="")
+			elif(b[y][x].team == 0):
+				print(Fore.BLUE,end="")
+			print(chooseSprite(b[y][x]), end =" ")
+			print(Back.RESET+Fore.RESET,end = "")
+		print("█")
+	print("  "+"▀"*18)
+	if g.turn == 0:
+		print(Fore.BLUE+"      > White <",g.getScore(),Fore.RESET)
+	else:
+		print(Fore.BLUE+"        White ",g.getScore(),Fore.RESET)
+	print(Style.RESET_ALL,end="")

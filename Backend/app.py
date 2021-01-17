@@ -5,11 +5,13 @@ from piece import Piece
 from coord import Coord
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["DEBUG"] = False
+CORS(app)
 api = Api(app)
-
+CORS(app)
 import pyrebase
 
 config = {
@@ -117,5 +119,6 @@ def makeID():
 api.add_resource(apiHandler, '/')
 
 
+
 if __name__ == "__main__":
-    app.run(host = "0.0.0.0")
+    app.run(host="0.0.0.0")
