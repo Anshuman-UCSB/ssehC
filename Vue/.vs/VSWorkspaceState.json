@@ -8,6 +8,6 @@
     "\\src\\layouts",
     "\\src\\router"
   ],
-  "SelectedNode": "\\src\\components\\chessSquare.vue",
+  "SelectedNode": "\\src\\firebase-config.ts",
   "PreviewInSolutionExplorer": false
 }
